@@ -169,7 +169,7 @@ margin: auto;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
 
-input[type="submit"]{
+input[type="submit"] {
 	font-family: 'Syne';
 	font-weight: 700;
 	color: white;
@@ -186,3 +186,20 @@ footer nav ul {
 	margin: 2em
 }
 
+.filters button {
+	font-family: 'Syne';
+	font-weight: 700;
+	background-color: white;
+	color: #1D6154;
+	margin : 2em auto ;
+	width: auto;
+	text-align: center;
+	border-radius: 60px ;
+	padding: 10px 20px;
+	font-size: 19px;
+	cursor: pointer;
+}
+.filters button:hover {
+	background-color: #1D6154;
+	color: white;
+}
