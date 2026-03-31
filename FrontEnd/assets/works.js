@@ -1,3 +1,5 @@
+
+
 //La fonction init() sert à organiser le démarrage de l'application
 //dit dans quel ordre lancer les fonctions et attend les données avant d'agir
 //les données doivent être chargées avant de lancer les boutons
