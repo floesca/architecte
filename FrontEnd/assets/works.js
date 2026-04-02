@@ -68,7 +68,7 @@ btnTous.addEventListener("click", () => {
 })
 filters.appendChild(btnTous)
 
-//création des bouton pour chaque catégorie
+//création des boutons pour chaque catégorie
 for (let i = 0; i < categories.length; i++) {
     const category = categories[i]
     const btnFiltre = document.createElement("button")

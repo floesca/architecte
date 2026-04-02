@@ -48,9 +48,12 @@ table {
 	border-spacing: 0;
 }
 /** end reset css**/
+
+/*le max-width limite la taille du site, donc si la fenêtre est plus grande, la bandeau noir,
+même à 100%, est limité par le max-width et ne peut pas couvrir toute la largeur*/
 body {
 	max-width: 1140px;
-	margin:auto;
+	margin: auto;
 	font-family: 'Work Sans' ;
 	font-size: 14px;
 }
@@ -127,7 +130,7 @@ li:hover , a:hover{
 }
 #portfolio h2 {
 	text-align: center;
-	margin-bottom: 1em;
+	margin-bottom: 60px;
 }
 .gallery {
 	width: 100%;
@@ -196,15 +199,16 @@ footer nav ul {
 	margin: 2em;
 }
 
+/* div filtres*/
 .filters button {
 	font-family: 'Syne';
 	font-weight: 700;
-	background-color: white;
+	background-color: #FFFEF8;
 	color: #1D6154;
-	margin : 2em auto ;
-	width: auto;
-	text-align: center;
-	border-radius: 60px ;
+	margin-left: 10px;
+	margin-bottom: 50px;
+	border-radius: 60px;
+	border-width: 1px;
 	padding: 10px 20px;
 	font-size: 19px;
 	cursor: pointer;
@@ -212,6 +216,10 @@ footer nav ul {
 .filters button:hover {
 	background-color: #1D6154;
 	color: white;
+}
+.filters {
+	display: flex;
+	justify-content: center;
 }
 
 /*bouton modifier affiché que lorsque l'admin est connecté */
