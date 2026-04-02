@@ -98,9 +98,9 @@ nav a {
 	text-decoration: none;
 	color: black;
 }
-
 li:hover , a:hover{
 	color: #B1663C;
+	cursor: pointer;
 }
 #introduction {
 	display: flex;
@@ -178,6 +178,7 @@ li:hover , a:hover{
 .login a:hover {
 	color: #B1663C;
 }
+
 input[type="submit"] {
 	font-family: 'Syne';
 	font-weight: 700;
@@ -211,4 +212,29 @@ footer nav ul {
 .filters button:hover {
 	background-color: #1D6154;
 	color: white;
+}
+
+/*bouton modifier affiché que lorsque l'admin est connecté */
+.edit-mode {
+	display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+.portfolio-header {
+	display: flex;
+	align-items: baseline;
+	gap: 20px;
+	justify-content: center;
+}
+
+/*bandeau en haut de page noir*/
+.bandeau-edit-mode {
+	display: flex;
+	justify-content: center;
+	padding: 20px 0;
+	background-color: black;
+	color: white;
+	gap: 8px;
+	width: 100%;
 }
