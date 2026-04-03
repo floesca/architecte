@@ -1,5 +1,53 @@
+function init() {
+    createLoginForm()
+    ajoutListenerLogin()
+}
+
+init()
+
+//création formulaire de connexion JS
+function createLoginForm() {
+    const loginForm = document.querySelector(".login-form")
+
+    const form = document.createElement("form")
+
+    const labelEmail = document.createElement("label")
+    labelEmail.textContent = "E-mail"
+    const inputEmail = document.createElement("input")
+    inputEmail.type = "email"
+    inputEmail.name = "email"
+    inputEmail.id = "email"
+    inputEmail.required = true
+
+    const labelPassword = document.createElement("label")
+    labelPassword.textContent = "Mot de passe"
+    const inputPassword = document.createElement("input")
+    inputPassword.type = "password"
+    inputPassword.name = "password"
+    inputPassword.id = "pass"
+    inputPassword.minLength = "6"
+    inputPassword.required = true
+
+    const btnSubmit = document.createElement("input")
+    btnSubmit.type = "submit"
+    btnSubmit.value = "Se connecter"
+
+    const forgottenPassword = document.createElement("p")
+    forgottenPassword.textContent = "Mot de passe oublié"
+
+    form.appendChild(labelEmail)
+    form.appendChild(inputEmail)
+    form.appendChild(labelPassword)
+    form.appendChild(inputPassword)
+    form.appendChild(btnSubmit)
+    form.appendChild(forgottenPassword)
+
+    loginForm.appendChild(form)
+}
+
+
 function ajoutListenerLogin() {
-    const envoyerLogin = document.getElementById("login")
+    const envoyerLogin = document.querySelector(".login-form")
     envoyerLogin.addEventListener("submit", async (event) => {
         console.log("Formulaire soumis")
     event.preventDefault()
@@ -27,3 +75,4 @@ function ajoutListenerLogin() {
 }
 
 ajoutListenerLogin()
+
