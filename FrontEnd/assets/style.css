@@ -248,3 +248,15 @@ footer nav ul {
 	gap: 8px;
 	width: 100%;
 }
+
+/* message d'erreur mot de passe */
+.error {
+  	color: red;
+    font-size: 14px;
+    display: none;
+}
+
+.error.active {
+  display: block;
+  margin-top: 20px;
+}

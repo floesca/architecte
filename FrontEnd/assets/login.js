@@ -6,6 +6,10 @@ function init() {
 init()
 
 //création formulaire de connexion JS
+
+//pas nécessaire, page login HTML OK aussi
+//une boucle éviterai la répétition
+
 function createLoginForm() {
     const loginForm = document.querySelector(".login-form")
 
@@ -28,6 +32,9 @@ function createLoginForm() {
     inputPassword.minLength = "6"
     inputPassword.required = true
 
+    const errorSpan = document.createElement("span")
+    errorSpan.className = "error"
+
     const btnSubmit = document.createElement("input")
     btnSubmit.type = "submit"
     btnSubmit.value = "Se connecter"
@@ -39,6 +46,7 @@ function createLoginForm() {
     form.appendChild(inputEmail)
     form.appendChild(labelPassword)
     form.appendChild(inputPassword)
+    form.appendChild(errorSpan)
     form.appendChild(btnSubmit)
     form.appendChild(forgottenPassword)
 
@@ -47,6 +55,8 @@ function createLoginForm() {
 
 
 function ajoutListenerLogin() {
+    const errorPassword = document.querySelector("span.error")
+
     const envoyerLogin = document.querySelector(".login-form")
     envoyerLogin.addEventListener("submit", async (event) => {
         console.log("Formulaire soumis")
@@ -69,10 +79,8 @@ function ajoutListenerLogin() {
         localStorage.setItem("token", data.token)
         window.location.href = "index.html"
     } else {
-        alert("Erreur de connexion")
+        errorPassword.textContent = "Le mot de passe est incorrect."
+        errorPassword.className = "error active"
     }   
 })
 }
-
-ajoutListenerLogin()
-
