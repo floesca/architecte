@@ -86,13 +86,27 @@ function loadWorks(works) {
     modalGallery.innerHTML = "" 
     for (let i = 0; i < works.length; i++) {
         const figure = document.createElement("div")
+        figure.classList.add("image-container-modal")
 
         const worksElement = document.createElement("img")
         worksElement.src = works[i].imageUrl
 
+        const deleteIcon = document.createElement("i")
+        deleteIcon.className = "fa-solid fa-trash-can delete-icon"
+
         figure.appendChild(worksElement)
+        figure.appendChild(deleteIcon)
 
         modalGallery.appendChild(figure)
     }
 }
 fetchWorks()
+
+// fonction afin de supprimer les travaux et ajouter l'icône poubelle
+function deleteWorks(id) {
+  fetch('http://localhost:5678/api/works/' + id, {
+    method: 'DELETE',
+  }).then(response => response.json())
+
+  console.log("removed")
+}

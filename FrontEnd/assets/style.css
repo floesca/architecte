@@ -320,3 +320,21 @@ footer nav ul {
 	gap: 10px;
 	margin: 40px 70px;
 }
+/* ajout de l'icône poubelle */
+.image-container-modal {
+  position: relative;
+}
+.image-container-modal img {
+  width: 100%;
+  display: block;
+}
+.delete-icon {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: rgba(0,0,0,0.7);
+  color: white;
+  padding: 5px;
+  border-radius: 4px;
+  cursor: pointer;
+}
