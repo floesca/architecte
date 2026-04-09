@@ -260,3 +260,46 @@ footer nav ul {
   display: block;
   margin-top: 20px;
 }
+
+/* modale */
+.modal {
+	position: fixed;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.3);
+}
+.modal-wrapper {
+	background-color: #FFFEF8;
+	width: 600px;
+	height: 550px;
+	padding: 20px;
+	border-radius: 10px;
+}
+.modal-wrapper i {
+	float: right;
+	cursor: pointer;
+}
+.modal-wrapper p {
+	font-size: 30px;
+	text-align: center;
+	margin-top: 40px;
+}
+.modal-wrapper button {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-family: 'Syne';
+	font-weight: 700;
+	color: white;
+	background-color: #1D6154;
+	margin : 2em auto ;
+	width: 237px;
+	height: 36px;
+	text-align: center;
+	border-radius: 60px ;
+}

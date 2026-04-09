@@ -33,3 +33,40 @@ if (isValid) {
     document.querySelector(".bandeau-edit-mode").style.display = "none"
     document.querySelector(".edit-mode").style.display = "none"
 }
+
+// Modale
+let modal = null
+
+const openModal = function (e) {
+  e.preventDefault()
+  const target = document.querySelector(e.target.getAttribute("href"))
+  target.style.display = null //le style display: none passe au display: flex et devient visible
+  target.removeAttribute("aria-hidden")
+  target.setAttribute("aria-modal", "true")
+  modal = target
+  modal.addEventListener("click", closeModal)
+  modal.querySelector(".js-close-modal").addEventListener("click", closeModal)
+  modal.querySelector(".js-stop-modal").addEventListener("click", stopPropagation)
+}
+
+const closeModal = function (e) {
+  if (modal === null) return
+  e.preventDefault()
+  modal.style.display = "none"
+  modal.setAttribute("aria-hidden", "true")
+  modal.removeAttribute("aria-modal")
+  modal.removeEventListener("click", closeModal)
+  modal.querySelector(".js-close-modal").removeEventListener("click", closeModal)
+  modal.querySelector(".js-stop-modal").removeEventListener("click", stopPropagation)
+  modal = null
+}
+
+// évite que la modale se ferme en appuyant n'importe où
+const stopPropagation = function (e) {
+  e.stopPropagation()
+}
+
+// quand on clique sur chaque lien avec la classe js-modal, la fonction openModal se lance
+document.querySelectorAll(".js-modal").forEach(a => {
+  a.addEventListener("click", openModal)
+})
