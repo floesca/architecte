@@ -70,3 +70,29 @@ const stopPropagation = function (e) {
 document.querySelectorAll(".js-modal").forEach(a => {
   a.addEventListener("click", openModal)
 })
+
+// récupération de la gallerie depuis l'API
+let works = []
+async function fetchWorks() {
+    //récupère et traite la réponse de l'API
+    const response = await fetch("http://localhost:5678/api/works")
+    works = await response.json()
+    loadWorks(works)
+}
+
+// affichage des travaux dans la modale
+function loadWorks(works) {
+    const modalGallery = document.querySelector(".modal-gallery")
+    modalGallery.innerHTML = "" 
+    for (let i = 0; i < works.length; i++) {
+        const figure = document.createElement("div")
+
+        const worksElement = document.createElement("img")
+        worksElement.src = works[i].imageUrl
+
+        figure.appendChild(worksElement)
+
+        modalGallery.appendChild(figure)
+    }
+}
+fetchWorks()
