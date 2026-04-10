@@ -129,6 +129,14 @@ function backBtn() {
 }
 backBtn()
 
+// champ ajouter photo, listener bouton
+const fileElement = document.getElementById("file-element")
+const btnAddFile = document.getElementById("btn-add-file")
+
+btnAddFile.addEventListener("click", (e) => {
+  console.log("test")
+})
+
 
 // fonction afin de supprimer les travaux et ajouter l'icône poubelle
 function deleteWorks(id) {

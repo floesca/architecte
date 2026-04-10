@@ -71,7 +71,12 @@
 			</div>
 			<p>Ajout photo</p>
 			<div class="add-photo-form">
-				<!-- ajout files -->
+				<div class="add-file">
+					<i class="fa-regular fa-image"></i>
+					<input type="file" id="file-element" accept="image/*" style="display: none;">
+					<button id="btn-add-file">+ Ajouter photo</button>
+					<p>jpg, png : 4mo max</p>
+				</div>
 				<label for="title">Titre</label>
 				<input type="text" name="title" id="title">
 				<label for="category">Catégorie</label>
@@ -82,7 +87,7 @@
 				</select>
 			</div>
 			<hr />
-			<button>Valider</button>
+			<button id="btn-validate">Valider</button>
 		</div>
 	</aside>
 
