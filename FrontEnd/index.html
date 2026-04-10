@@ -48,20 +48,41 @@
 			<h2>Mes Projets</h2>
 			<div class="edit-mode">
 				<i class="fa-regular fa-pen-to-square"></i>
-				<a href="#modal1" class="js-modal">modifier</a>
+				<a href="#modal" class="js-modal">modifier</a>
 			</div>
 		</div>
 		<div class="filters"></div>
 		<div class="gallery"></div>
 	</section>
 
-	<aside id="modal1" class="modal" aria-hidden="true" role="dialog" style="display: none;">
-		<div class="modal-wrapper js-stop-modal">
+	<aside id="modal" class="modal" aria-hidden="true" role="dialog" style="display: none;">
+		<div id="modal1" class="modal-wrapper js-stop-modal">
 			<i class="fa-solid fa-xmark js-close-modal"></i>
 			<p>Galerie photo</p>
 			<div class="modal-gallery"></div>
 			<hr />
-			<button>Ajouter une photo</button>
+			<button id="btn-add-photo">Ajouter une photo</button>
+		</div>
+	
+		<div id="modal2" class="modal-wrapper js-stop-modal" style="display: none;">
+			<div class="modal-icons">
+				<i class="fa-solid fa-arrow-left"></i>
+				<i class="fa-solid fa-xmark js-close-modal"></i>
+			</div>
+			<p>Ajout photo</p>
+			<div class="add-photo-form">
+				<!-- ajout files -->
+				<label for="title">Titre</label>
+				<input type="text" name="title" id="title">
+				<label for="category">Catégorie</label>
+				<select name="category" id="category">
+					<option value="objets">Objets</option>
+					<option value="appartements">Appartements</option>
+					<option value="hotels-restaurants">Hôtels & restaurants</option>
+				</select>
+			</div>
+			<hr />
+			<button>Valider</button>
 		</div>
 	</aside>
 

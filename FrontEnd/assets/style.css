@@ -338,3 +338,17 @@ footer nav ul {
   border-radius: 4px;
   cursor: pointer;
 }
+
+/* modal 2 */
+.modal2 {
+	display: none;
+}
+.modal-icons {
+	display: flex;
+	justify-content: space-between;
+}
+.add-photo-form {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}

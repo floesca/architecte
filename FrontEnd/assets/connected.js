@@ -68,7 +68,9 @@ const stopPropagation = function (e) {
 
 // quand on clique sur chaque lien avec la classe js-modal, la fonction openModal se lance
 document.querySelectorAll(".js-modal").forEach(a => {
-  a.addEventListener("click", openModal)
+  a.addEventListener("click", (e) => {
+  openModal(e);
+  })
 })
 
 // récupération de la gallerie depuis l'API
@@ -102,6 +104,32 @@ function loadWorks(works) {
 }
 fetchWorks()
 
+// listener bouton pour passer au formulaire page suivante
+const btnAddPhoto = document.getElementById("btn-add-photo")
+const modal1 = document.getElementById("modal1")
+const modal2 = document.getElementById("modal2")
+
+btnAddPhoto.addEventListener("click", () => {
+  modal1.style.display = "none"
+  modal2.style.display = "block"
+})
+
+// fonction retour en arrière sur la flêche
+function backBtn() {
+  const modal1 = document.getElementById("modal1")
+  const modal2 = document.getElementById("modal2")
+  const arrowLeft = document.querySelector("#modal2 .fa-arrow-left")
+  
+  arrowLeft.addEventListener("click", (e) => {
+    e.stopPropagation()
+
+    modal2.style.display = "none"
+    modal1.style.display = "block"
+  })
+}
+backBtn()
+
+
 // fonction afin de supprimer les travaux et ajouter l'icône poubelle
 function deleteWorks(id) {
   fetch('http://localhost:5678/api/works/' + id, {
@@ -110,3 +138,4 @@ function deleteWorks(id) {
 
   console.log("removed")
 }
+
