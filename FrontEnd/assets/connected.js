@@ -1,11 +1,16 @@
 const token = localStorage.getItem("token")
 const btnLogin = document.getElementById("btnLogin")
 
-const isValid = token && isTokenValid
+const isValid = token && isTokenValid(token)
+// devrait être isTokenValid(token) mais ne marche pas, je ne peux plus me connecter donc problème avec cette fonction
 
 function isTokenValid(token) {
+  console.log(token)
+  if (!token) return false
+
   try {
-    const payload = jwtDecode(token)
+    const payload = parseJwt(token)
+    console.log(payload)
     const now = Date.now() / 1000 // en secondes
 
     return payload.exp > now
@@ -13,6 +18,21 @@ function isTokenValid(token) {
     return false
   }
 }
+// Source - https://stackoverflow.com/a/38552302
+// Posted by Peheje, modified by community. See post 'Timeline' for change history
+// Retrieved 2026-04-13, License - CC BY-SA 4.0
+
+function parseJwt (token) {
+    var base64Url = token.split('.')[1];
+    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    console.log(base64)
+    var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+
+    return JSON.parse(jsonPayload);
+}
+
 // jwt-decode est une librairie JS qui permet de lire le contenu JWT facilement
 // extrait le payload (la deuxième partie du token)
 // ne vérifie pas la signature et l'authenticité, lit juste la date d'expiration
@@ -32,6 +52,7 @@ if (isValid) {
     console.log("non connecté")
     document.querySelector(".bandeau-edit-mode").style.display = "none"
     document.querySelector(".edit-mode").style.display = "none"
+    document.querySelector(".filters").style.display = "flex"
 }
 
 // Modale
@@ -118,6 +139,7 @@ function loadWorks(works) {
     for (let i = 0; i < works.length; i++) {
         const figure = document.createElement("div")
         figure.classList.add("image-container-modal")
+        figure.dataset.id = works[i].id
 
         const worksElement = document.createElement("img")
         worksElement.src = works[i].imageUrl
@@ -142,12 +164,5 @@ window.addEventListener("keydown", (e) => {
   closeModal()
 })
 
-
-// champ ajouter photo, listener bouton
-const fileElement = document.getElementById("file-element")
-const btnAddFile = document.getElementById("btn-add-file")
-
-btnAddFile.addEventListener("click", (e) => {
-  console.log("test")
-})
-
+// supression des travaux existants
+// API fetch DELETE

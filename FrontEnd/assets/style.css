@@ -231,6 +231,10 @@ footer nav ul {
     gap: 8px;
     cursor: pointer;
 }
+.edit-mode a {
+	color: black;
+	text-decoration: none;
+}
 .portfolio-header {
 	display: flex;
 	align-items: baseline;

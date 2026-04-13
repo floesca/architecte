@@ -79,7 +79,7 @@ function ajoutListenerLogin() {
         localStorage.setItem("token", data.token)
         window.location.href = "index.html"
     } else {
-        errorPassword.textContent = "Le mot de passe est incorrect."
+        errorPassword.textContent = "Le mot de passe ou l'email est incorrect."
         errorPassword.className = "error active"
     }   
 })
