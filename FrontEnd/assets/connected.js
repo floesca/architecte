@@ -36,37 +36,68 @@ if (isValid) {
 
 // Modale
 let modal = null
+let currentStep = 1
 
+// ouvrir la modale
 const openModal = function (e) {
   e.preventDefault()
-  const target = document.querySelector(e.target.getAttribute("href"))
-  target.style.display = null //le style display: none passe au display: flex et devient visible
-  target.removeAttribute("aria-hidden")
-  target.setAttribute("aria-modal", "true")
-  modal = target
-  modal.addEventListener("click", closeModal)
-  modal.querySelector(".js-close-modal").addEventListener("click", closeModal)
-  modal.querySelector(".js-stop-modal").addEventListener("click", stopPropagation)
+
+  modal = document.querySelector("#modal")
+
+  modal.style.display = "flex"
+  modal.removeAttribute("aria-hidden")
+  modal.setAttribute("aria-modal", "true")
+
+  showStep(1)
+
+  modal.addEventListener("click", function (e) {
+  if (e.target === modal) {
+    closeModal(e)
+  }
+})
 }
 
+// fermer la modale
 const closeModal = function (e) {
-  if (modal === null) return
+  if (!modal) return
+
   e.preventDefault()
+
   modal.style.display = "none"
   modal.setAttribute("aria-hidden", "true")
   modal.removeAttribute("aria-modal")
+
   modal.removeEventListener("click", closeModal)
-  modal.querySelector(".js-close-modal").removeEventListener("click", closeModal)
-  modal.querySelector(".js-stop-modal").removeEventListener("click", stopPropagation)
+
   modal = null
 }
 
-// évite que la modale se ferme en appuyant n'importe où
-const stopPropagation = function (e) {
-  e.stopPropagation()
+// afficher une étape
+const showStep = function(step) {
+  currentStep = step
+
+  document.querySelectorAll(".modal-wrapper").forEach(el => {
+    el.style.display = el.dataset.step == step ? "block" : "none"
+  })
 }
 
-// quand on clique sur chaque lien avec la classe js-modal, la fonction openModal se lance
+// navigation
+document.addEventListener("click", function (e) {
+
+  if (e.target.closest("#btn-add-photo")) {
+    showStep(2)
+  }
+
+  if (e.target.closest(".js-back")) {
+    showStep(1)
+  }
+
+  if (e.target.closest(".js-close-modal")) {
+    closeModal(e)
+  }
+})
+
+// quand on clique sur chaque lien avec la classe js-modal, la fonction openModal se lance (bouton modifier)
 document.querySelectorAll(".js-modal").forEach(a => {
   a.addEventListener("click", (e) => {
   openModal(e);
@@ -104,30 +135,6 @@ function loadWorks(works) {
 }
 fetchWorks()
 
-// listener bouton pour passer au formulaire page suivante
-const btnAddPhoto = document.getElementById("btn-add-photo")
-const modal1 = document.getElementById("modal1")
-const modal2 = document.getElementById("modal2")
-
-btnAddPhoto.addEventListener("click", () => {
-  modal1.style.display = "none"
-  modal2.style.display = "block"
-})
-
-// fonction retour en arrière sur la flêche
-function backBtn() {
-  const modal1 = document.getElementById("modal1")
-  const modal2 = document.getElementById("modal2")
-  const arrowLeft = document.querySelector("#modal2 .fa-arrow-left")
-  
-  arrowLeft.addEventListener("click", (e) => {
-    e.stopPropagation()
-
-    modal2.style.display = "none"
-    modal1.style.display = "block"
-  })
-}
-backBtn()
 
 // champ ajouter photo, listener bouton
 const fileElement = document.getElementById("file-element")
@@ -136,14 +143,4 @@ const btnAddFile = document.getElementById("btn-add-file")
 btnAddFile.addEventListener("click", (e) => {
   console.log("test")
 })
-
-
-// fonction afin de supprimer les travaux et ajouter l'icône poubelle
-function deleteWorks(id) {
-  fetch('http://localhost:5678/api/works/' + id, {
-    method: 'DELETE',
-  }).then(response => response.json())
-
-  console.log("removed")
-}
 

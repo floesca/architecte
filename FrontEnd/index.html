@@ -56,17 +56,17 @@
 	</section>
 
 	<aside id="modal" class="modal" aria-hidden="true" role="dialog" style="display: none;">
-		<div id="modal1" class="modal-wrapper js-stop-modal">
+		<div id="modal1" class="modal-wrapper js-stop-modal" data-step="1">
 			<i class="fa-solid fa-xmark js-close-modal"></i>
 			<p>Galerie photo</p>
 			<div class="modal-gallery"></div>
 			<hr />
-			<button id="btn-add-photo">Ajouter une photo</button>
+			<button id="btn-add-photo" type="button">Ajouter une photo</button>
 		</div>
 	
-		<div id="modal2" class="modal-wrapper js-stop-modal" style="display: none;">
+		<div id="modal2" class="modal-wrapper js-stop-modal" data-step="2" style="display: none;">
 			<div class="modal-icons">
-				<i class="fa-solid fa-arrow-left"></i>
+				<i class="fa-solid fa-arrow-left js-back"></i>
 				<i class="fa-solid fa-xmark js-close-modal"></i>
 			</div>
 			<p>Ajout photo</p>
@@ -74,7 +74,7 @@
 				<div class="add-file">
 					<i class="fa-regular fa-image"></i>
 					<input type="file" id="file-element" accept="image/*" style="display: none;">
-					<button id="btn-add-file">+ Ajouter photo</button>
+					<button id="btn-add-file" type="button">+ Ajouter photo</button>
 					<p>jpg, png : 4mo max</p>
 				</div>
 				<label for="title">Titre</label>
