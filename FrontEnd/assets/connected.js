@@ -39,9 +39,8 @@ let modal = null
 let currentStep = 1
 
 // ouvrir la modale
-const openModal = function (e) {
-  e.preventDefault()
-
+function openModal(e) {
+ 
   modal = document.querySelector("#modal")
 
   modal.style.display = "flex"
@@ -58,10 +57,9 @@ const openModal = function (e) {
 }
 
 // fermer la modale
-const closeModal = function (e) {
+function closeModal(e) {
+  
   if (!modal) return
-
-  e.preventDefault()
 
   modal.style.display = "none"
   modal.setAttribute("aria-hidden", "true")
@@ -73,7 +71,7 @@ const closeModal = function (e) {
 }
 
 // afficher une étape
-const showStep = function(step) {
+function showStep(step) {
   currentStep = step
 
   document.querySelectorAll(".modal-wrapper").forEach(el => {
@@ -134,6 +132,15 @@ function loadWorks(works) {
     }
 }
 fetchWorks()
+
+// fermeture de la modale avec la touche escape
+window.addEventListener("keydown", (e) => {
+  
+  if (e.key !== "Escape") return
+  if (!modal) return
+
+  closeModal()
+})
 
 
 // champ ajouter photo, listener bouton
