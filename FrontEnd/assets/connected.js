@@ -243,3 +243,102 @@ function showMessage(text, isError = false) {
   }, 3000)
 }
 
+// ajout travaux
+const fileInput = document.getElementById("file-element")
+const btnAddFile = document.getElementById("btn-add-file")
+
+btnAddFile.addEventListener("click", (e) => {
+  e.preventDefault()
+  fileInput.click()
+})
+
+fileInput.addEventListener("change", () => {
+  const file = fileInput.files[0]
+  if (!file) return
+
+  const preview = document.getElementById("preview-image")
+  const placeholder = document.getElementById("upload-placeholder")
+
+  preview.src = URL.createObjectURL(file)
+  preview.style.display = "block"
+  placeholder.style.display = "none"
+})
+
+// catégories pour la liste déroulante
+let categories = []
+
+async function fetchCategories() {
+  const response = await fetch("http://localhost:5678/api/categories")
+  categories = await response.json()
+
+    loadCategories(categories)
+}
+function loadCategories(categories) {
+  const select = document.getElementById("category")
+  select.innerHTML = "" 
+
+  categories.forEach(cat => {
+    const option = document.createElement("option")
+    option.value = cat.id
+    option.textContent = cat.name
+
+    select.appendChild(option)
+  })
+}
+fetchCategories()
+
+const titleInput = document.getElementById("title")
+const categorySelect = document.getElementById("category")
+const btnValidate = document.getElementById("btn-validate")
+
+btnValidate.addEventListener("click", async (e) => {
+  e.preventDefault()
+
+  const file = fileInput.files[0]
+  const title = titleInput.value
+  const category = categorySelect.value
+
+  if (!file || !title || !category) {
+    showMessage("Tous les champs sont obligatoires", true)
+    return
+  }
+
+  const formData = new FormData()
+  formData.append("image", file)
+  formData.append("title", title)
+  formData.append("category", category)
+
+  try {
+    const token = localStorage.getItem("token")
+
+    const response = await fetch("http://localhost:5678/api/works", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${token}`
+      },
+      body: formData
+    })
+
+    if (!response.ok) {
+      throw new Error("Erreur upload")
+    }
+
+    showMessage("Projet ajouté")
+
+    // reset formulaire
+    fileInput.value = ""
+    titleInput.value = ""
+    categorySelect.value = ""
+    document.getElementById("preview-image").style.display = "none"
+
+    // refresh galerie
+    fetchWorks()
+
+    // revenir étape 1
+    showStep(1)
+
+  } catch (error) {
+    showMessage("Erreur lors de l'ajout", true)
+    console.error(error)
+  }
+})

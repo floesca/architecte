@@ -80,19 +80,18 @@
 			<p>Ajout photo</p>
 			<div class="add-photo-form">
 				<div class="add-file">
-					<i class="fa-regular fa-image"></i>
+					<div id="upload-placeholder">
+						<i class="fa-regular fa-image"></i>
+						<button id="btn-add-file" type="button">+ Ajouter photo</button>
+						<p>jpg, png : 4mo max</p>
+					</div>
+					<img id="preview-image" style="display:none; max-width: 100px;">
 					<input type="file" id="file-element" accept="image/*" style="display: none;">
-					<button id="btn-add-file" type="button">+ Ajouter photo</button>
-					<p>jpg, png : 4mo max</p>
 				</div>
 				<label for="title">Titre</label>
 				<input type="text" name="title" id="title">
 				<label for="category">Catégorie</label>
-				<select name="category" id="category">
-					<option value="objets">Objets</option>
-					<option value="appartements">Appartements</option>
-					<option value="hotels-restaurants">Hôtels & restaurants</option>
-				</select>
+				<select name="category" id="category"></select>
 			</div>
 			<hr />
 			<button id="btn-validate">Valider</button>

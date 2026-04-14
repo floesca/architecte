@@ -404,6 +404,12 @@ footer nav ul {
 .add-photo-form label {
 	margin: 2em 0 1em 0;
 }
+#upload-placeholder {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
 #btn-validate {
 	background-color: #A7A7A7;
 	border: none;
