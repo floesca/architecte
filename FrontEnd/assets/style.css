@@ -416,3 +416,16 @@ footer nav ul {
 .modal-icons {
 	font-size: 21px;
 }
+
+/* message de confirmation de suppression */
+.confirm-box {
+	position: absolute;
+	background: #FFFEF8;
+	padding: 15px;
+	border: 1px solid;
+	bottom: 20px;
+	left: 50%;
+}
+.hidden {
+	display: none;
+}

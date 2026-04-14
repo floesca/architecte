@@ -166,3 +166,80 @@ window.addEventListener("keydown", (e) => {
 
 // supression des travaux existants
 // API fetch DELETE
+let workToDelete = null
+
+document.addEventListener("click", async (e) => {
+
+  const deleteBtn = e.target.closest(".delete-icon")
+  
+  if (!deleteBtn) return
+
+  // if (!confirm("Supprimer cet élément ?")) return message du navigateur mais on pourrait mettre un message dans le code
+  
+  const figure = deleteBtn.closest(".image-container-modal")
+
+  if (!figure) return
+
+  workToDelete = figure
+
+  document.getElementById("confirm-delete").classList.remove("hidden")
+
+  // await deleteWork(id) en commentaire pour éviter d'effacer les travaux dans mon API
+
+  // figure.remove()  supprime seulement dans la modale mais pas la gallerie principale
+})
+
+document.getElementById("confirm-yes").addEventListener("click", async () => {
+
+  if (!workToDelete) return
+
+  const id = workToDelete.dataset.id
+
+  try {
+    // await deleteWork(id)
+
+    workToDelete.remove()
+    showMessage("Supprimé")
+
+  } catch {
+    showMessage("Erreur", true)
+  }
+
+  workToDelete = null
+  document.getElementById("confirm-delete").classList.add("hidden")
+})
+
+document.getElementById("confirm-no").addEventListener("click", () => {
+  workToDelete = null
+  document.getElementById("confirm-delete").classList.add("hidden")
+})
+
+async function deleteWork(id) {
+  try {
+    const token = localStorage.getItem("token")
+
+    const response = await fetch(`http://localhost:5678/api/works/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Authorization": `Bearer ${token}`
+    }
+    })
+    if (!response.ok) {
+      throw new Error("Erreur suppression")
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+function showMessage(text, isError = false) {
+  const message = document.getElementById("message")
+
+  message.textContent = text
+  message.style.color = isError ? "red" : "green"
+
+  setTimeout(() => {
+    message.textContent = ""
+  }, 3000)
+}
+
