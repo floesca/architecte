@@ -184,8 +184,6 @@ document.addEventListener("click", async (e) => {
 
   document.getElementById("confirm-delete").classList.remove("hidden")
 
-  // await deleteWork(id) en commentaire pour éviter d'effacer les travaux dans mon API
-
   // figure.remove()  supprime seulement dans la modale mais pas la gallerie principale
 })
 
@@ -196,9 +194,15 @@ document.getElementById("confirm-yes").addEventListener("click", async () => {
   const id = workToDelete.dataset.id
 
   try {
-    // await deleteWork(id)
+    await deleteWork(id)
 
+     // suppression modale
     workToDelete.remove()
+
+    // suppression galerie principale
+    document.querySelectorAll(`.gallery [data-id="${id}"]`).forEach(el => {
+      el.remove()
+    })
     showMessage("Supprimé")
 
   } catch {
@@ -232,15 +236,10 @@ async function deleteWork(id) {
   }
 }
 
-function showMessage(text, isError = false) {
+function showMessage(text) {
   const message = document.getElementById("message")
 
   message.textContent = text
-  message.style.color = isError ? "red" : "green"
-
-  setTimeout(() => {
-    message.textContent = ""
-  }, 3000)
 }
 
 // ajout travaux
@@ -303,6 +302,7 @@ btnValidate.addEventListener("click", async (e) => {
     return
   }
 
+// formData capture le formulaire HTML et le soumet avec fetch
   const formData = new FormData()
   formData.append("image", file)
   formData.append("title", title)
@@ -325,14 +325,15 @@ btnValidate.addEventListener("click", async (e) => {
 
     showMessage("Projet ajouté")
 
-    // reset formulaire
-    fileInput.value = ""
-    titleInput.value = ""
-    categorySelect.value = ""
-    document.getElementById("preview-image").style.display = "none"
+    const newWork = await response.json()
 
-    // refresh galerie
-    fetchWorks()
+    // ajout dans la galerie principale
+    addWorkToGallery(newWork)
+
+    // ajout dans la modale
+    addWorkToModal(newWork)
+
+    showMessage("Projet ajouté")
 
     // revenir étape 1
     showStep(1)
@@ -342,3 +343,40 @@ btnValidate.addEventListener("click", async (e) => {
     console.error(error)
   }
 })
+
+function addWorkToGallery(work) {
+  const gallery = document.querySelector(".gallery")
+
+  const figure = document.createElement("figure")
+  figure.dataset.id = work.id
+
+  const img = document.createElement("img")
+  img.src = work.imageUrl
+
+  const caption = document.createElement("figcaption")
+  caption.textContent = work.title
+
+  figure.appendChild(img)
+  figure.appendChild(caption)
+
+  gallery.appendChild(figure)
+}
+
+function addWorkToModal(work) {
+  const modalGallery = document.querySelector(".modal-gallery")
+
+  const div = document.createElement("div")
+  div.classList.add("image-container-modal")
+  div.dataset.id = work.id
+
+  const img = document.createElement("img")
+  img.src = work.imageUrl
+
+  const deleteIcon = document.createElement("i")
+  deleteIcon.className = "fa-solid fa-trash-can delete-icon"
+
+  div.appendChild(img)
+  div.appendChild(deleteIcon)
+
+  modalGallery.appendChild(div)
+}
