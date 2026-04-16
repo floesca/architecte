@@ -411,7 +411,7 @@ footer nav ul {
 	align-items: center;
 }
 #btn-validate {
-	background-color: #A7A7A7;
+	background-color: #1D6154;
 	border: none;
 	border-radius: 60px;
 	color: #FFFFFF;
@@ -429,9 +429,17 @@ footer nav ul {
 	background: #FFFEF8;
 	padding: 15px;
 	border: 1px solid;
-	bottom: 20px;
-	left: 50%;
+	bottom: 50px;
+    left: 40%;
+}
+.confirm-box p {
+	font-size: 16px;
 }
 .hidden {
 	display: none;
+}
+
+#message {
+	text-align: center;
+	color: red;
 }

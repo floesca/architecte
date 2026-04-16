@@ -240,6 +240,11 @@ function showMessage(text) {
   const message = document.getElementById("message")
 
   message.textContent = text
+
+  // disparition du message automatiquement
+  setTimeout(() => {
+    message.textContent = ""
+  }, 3000)
 }
 
 // ajout travaux
@@ -298,6 +303,7 @@ btnValidate.addEventListener("click", async (e) => {
   const category = categorySelect.value
 
   if (!file || !title || !category) {
+    console.log("bloqué validation")
     showMessage("Tous les champs sont obligatoires", true)
     return
   }
@@ -322,8 +328,6 @@ btnValidate.addEventListener("click", async (e) => {
     if (!response.ok) {
       throw new Error("Erreur upload")
     }
-
-    showMessage("Projet ajouté")
 
     const newWork = await response.json()
 
