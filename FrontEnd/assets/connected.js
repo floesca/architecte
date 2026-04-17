@@ -17,7 +17,7 @@ async function apiFetch(path, options = {}) {
   })
 
   if (!response.ok) {
-    throw new Error("Erreur API")
+    throw new Error(`Erreur API : ${response.status} ${response.statusText}`)
   }
 
   return response.status === 204 ? null : response.json()
@@ -25,7 +25,6 @@ async function apiFetch(path, options = {}) {
 
 // Vérifie que la date d'expiration du token est valide
 const token = getToken()
-const isValid = token && isTokenValid(token)
 function isTokenValid(token) {
   if (!token) return false
 
@@ -48,6 +47,7 @@ function parseJwt (token) {
 
     return JSON.parse(jsonPayload);
 }
+const isValid = token && isTokenValid(token)
 
 // UI (filtres, bouton d'édition, mode admin)
 const btnLogin = document.getElementById("btnLogin")
@@ -129,6 +129,12 @@ document.querySelectorAll(".js-modal").forEach(a => {
   })
 })
 
+document.querySelector("#modal").addEventListener("click", function (e) {
+  if (e.target === e.currentTarget) {
+    closeModal(e)
+  }
+})
+
 function openModal(e) {
   modal = document.querySelector("#modal")
 
@@ -137,12 +143,6 @@ function openModal(e) {
   modal.setAttribute("aria-modal", "true")
 
   showStep(1)
-
-  modal.addEventListener("click", function (e) {
-  if (e.target === modal) {
-    closeModal(e)
-  }
-})
 }
 
 function closeModal(e) {
@@ -151,8 +151,6 @@ function closeModal(e) {
   modal.style.display = "none"
   modal.setAttribute("aria-hidden", "true")
   modal.removeAttribute("aria-modal")
-
-  modal.removeEventListener("click", closeModal)
 
   modal = null
 }
@@ -240,13 +238,9 @@ document.getElementById("confirm-no").addEventListener("click", () => {
 })
 
 async function deleteWork(id) {
-  try {
     await apiFetch(`/works/${id}`, {
     method: "DELETE",
     })
-  } catch (error) {
-    console.error(error)
-  }
 }
 
 // Ajout d'un projet
@@ -304,6 +298,17 @@ btnValidate.addEventListener("click", async (e) => {
     addWorkToModal(newWork)
 
     showMessage("Projet ajouté")
+
+    // Réinitialisation du formulaire d'ajout après l'ajout du nouveau projet
+    titleInput.value = ""
+    fileInput.value = ""
+
+    const preview = document.getElementById("preview-image")
+    const placeholder = document.getElementById("upload-placeholder")
+    URL.revokeObjectURL(preview.src)
+    preview.src = ""
+    preview.style.display = "none"
+    placeholder.style.display = "flex"
 
     showStep(1)
 
