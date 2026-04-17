@@ -1,16 +1,36 @@
-const token = localStorage.getItem("token")
-const btnLogin = document.getElementById("btnLogin")
+// initialisation (chargement de la page)
+const API = "http://localhost:5678/api"
 
+function getToken() {
+  return localStorage.getItem("token")
+}
+
+async function apiFetch(path, options = {}) {
+  const token = getToken()
+
+  const response = await fetch(API + path, {
+    ...options,
+    headers: {
+      ...(options.headers || {}),
+      ...(token ? { Authorization: `Bearer ${token}` } : {})
+    }
+  })
+
+  if (!response.ok) {
+    throw new Error("Erreur API")
+  }
+
+  return response.status === 204 ? null : response.json()
+}
+
+// Vérifie que la date d'expiration du token est valide
+const token = getToken()
 const isValid = token && isTokenValid(token)
-// devrait être isTokenValid(token) mais ne marche pas, je ne peux plus me connecter donc problème avec cette fonction
-
 function isTokenValid(token) {
-  console.log(token)
   if (!token) return false
 
   try {
     const payload = parseJwt(token)
-    console.log(payload)
     const now = Date.now() / 1000 // en secondes
 
     return payload.exp > now
@@ -18,14 +38,10 @@ function isTokenValid(token) {
     return false
   }
 }
-// Source - https://stackoverflow.com/a/38552302
-// Posted by Peheje, modified by community. See post 'Timeline' for change history
-// Retrieved 2026-04-13, License - CC BY-SA 4.0
 
 function parseJwt (token) {
     var base64Url = token.split('.')[1];
     var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    console.log(base64)
     var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
     }).join(''));
@@ -33,12 +49,10 @@ function parseJwt (token) {
     return JSON.parse(jsonPayload);
 }
 
-// jwt-decode est une librairie JS qui permet de lire le contenu JWT facilement
-// extrait le payload (la deuxième partie du token)
-// ne vérifie pas la signature et l'authenticité, lit juste la date d'expiration
-
+// UI (filtres, bouton d'édition, mode admin)
+const btnLogin = document.getElementById("btnLogin")
 if (isValid) {
-  console.log("connecté (token valide)")
+  console.log("valide")
   document.querySelector(".filters").style.display = "none"
   
   btnLogin.textContent = "logout"
@@ -49,91 +63,26 @@ if (isValid) {
 
   })
 } else {
-    console.log("non connecté")
     document.querySelector(".bandeau-edit-mode").style.display = "none"
     document.querySelector(".edit-mode").style.display = "none"
     document.querySelector(".filters").style.display = "flex"
 }
 
-// Modale
-let modal = null
-let currentStep = 1
-
-// ouvrir la modale
-function openModal(e) {
- 
-  modal = document.querySelector("#modal")
-
-  modal.style.display = "flex"
-  modal.removeAttribute("aria-hidden")
-  modal.setAttribute("aria-modal", "true")
-
-  showStep(1)
-
-  modal.addEventListener("click", function (e) {
-  if (e.target === modal) {
-    closeModal(e)
-  }
-})
-}
-
-// fermer la modale
-function closeModal(e) {
-  
-  if (!modal) return
-
-  modal.style.display = "none"
-  modal.setAttribute("aria-hidden", "true")
-  modal.removeAttribute("aria-modal")
-
-  modal.removeEventListener("click", closeModal)
-
-  modal = null
-}
-
-// afficher une étape
-function showStep(step) {
-  currentStep = step
-
-  document.querySelectorAll(".modal-wrapper").forEach(el => {
-    el.style.display = el.dataset.step == step ? "block" : "none"
-  })
-}
-
-// navigation
-document.addEventListener("click", function (e) {
-
-  if (e.target.closest("#btn-add-photo")) {
-    showStep(2)
-  }
-
-  if (e.target.closest(".js-back")) {
-    showStep(1)
-  }
-
-  if (e.target.closest(".js-close-modal")) {
-    closeModal(e)
-  }
-})
-
-// quand on clique sur chaque lien avec la classe js-modal, la fonction openModal se lance (bouton modifier)
-document.querySelectorAll(".js-modal").forEach(a => {
-  a.addEventListener("click", (e) => {
-  openModal(e);
-  })
-})
-
-// récupération de la gallerie depuis l'API
+// Récupération des données API
 let works = []
 async function fetchWorks() {
-    //récupère et traite la réponse de l'API
-    const response = await fetch("http://localhost:5678/api/works")
-    works = await response.json()
-    loadWorks(works)
+    works = await apiFetch("/works")
+    loadModalWorks(works)
 }
 
-// affichage des travaux dans la modale
-function loadWorks(works) {
+let categories = []
+async function fetchCategories() {
+  categories = await apiFetch("/categories")
+    loadCategories(categories)
+}
+
+// Affichage des projets et des catégories dans la modale
+function loadModalWorks(works) {
     const modalGallery = document.querySelector(".modal-gallery")
     modalGallery.innerHTML = "" 
     for (let i = 0; i < works.length; i++) {
@@ -155,7 +104,83 @@ function loadWorks(works) {
 }
 fetchWorks()
 
-// fermeture de la modale avec la touche escape
+function loadCategories(categories) {
+  const select = document.getElementById("category")
+  select.innerHTML = "" 
+
+  categories.forEach(cat => {
+    const option = document.createElement("option")
+    option.value = cat.id
+    option.textContent = cat.name
+
+    select.appendChild(option)
+  })
+}
+fetchCategories()
+
+// Gestion de la modale
+let modal = null
+let currentStep = 1
+
+// quand on clique sur chaque lien avec la classe js-modal, la fonction openModal se lance (bouton modifier)
+document.querySelectorAll(".js-modal").forEach(a => {
+  a.addEventListener("click", (e) => {
+  openModal(e);
+  })
+})
+
+function openModal(e) {
+  modal = document.querySelector("#modal")
+
+  modal.style.display = "flex"
+  modal.removeAttribute("aria-hidden")
+  modal.setAttribute("aria-modal", "true")
+
+  showStep(1)
+
+  modal.addEventListener("click", function (e) {
+  if (e.target === modal) {
+    closeModal(e)
+  }
+})
+}
+
+function closeModal(e) {
+  if (!modal) return
+
+  modal.style.display = "none"
+  modal.setAttribute("aria-hidden", "true")
+  modal.removeAttribute("aria-modal")
+
+  modal.removeEventListener("click", closeModal)
+
+  modal = null
+}
+
+function showStep(step) {
+  currentStep = step
+
+  document.querySelectorAll(".modal-wrapper").forEach(el => {
+    el.style.display = el.dataset.step == step ? "block" : "none"
+  })
+}
+
+document.addEventListener("click", function (e) {
+
+  if (e.target.closest("#btn-add-photo")) {
+    showStep(2)
+  }
+
+  if (e.target.closest(".js-back")) {
+    showStep(1)
+  }
+
+  if (e.target.closest(".js-close-modal")) {
+    closeModal(e)
+  }
+})
+
+// Fermeture de la modale avec la touche escape
 window.addEventListener("keydown", (e) => {
   
   if (e.key !== "Escape") return
@@ -164,8 +189,7 @@ window.addEventListener("keydown", (e) => {
   closeModal()
 })
 
-// supression des travaux existants
-// API fetch DELETE
+// Suppression d'un projet
 let workToDelete = null
 
 document.addEventListener("click", async (e) => {
@@ -173,8 +197,6 @@ document.addEventListener("click", async (e) => {
   const deleteBtn = e.target.closest(".delete-icon")
   
   if (!deleteBtn) return
-
-  // if (!confirm("Supprimer cet élément ?")) return message du navigateur mais on pourrait mettre un message dans le code
   
   const figure = deleteBtn.closest(".image-container-modal")
 
@@ -183,10 +205,9 @@ document.addEventListener("click", async (e) => {
   workToDelete = figure
 
   document.getElementById("confirm-delete").classList.remove("hidden")
-
-  // figure.remove()  supprime seulement dans la modale mais pas la gallerie principale
 })
 
+// Confirmation de suppression
 document.getElementById("confirm-yes").addEventListener("click", async () => {
 
   if (!workToDelete) return
@@ -220,34 +241,15 @@ document.getElementById("confirm-no").addEventListener("click", () => {
 
 async function deleteWork(id) {
   try {
-    const token = localStorage.getItem("token")
-
-    const response = await fetch(`http://localhost:5678/api/works/${id}`, {
+    await apiFetch(`/works/${id}`, {
     method: "DELETE",
-    headers: {
-      "Authorization": `Bearer ${token}`
-    }
     })
-    if (!response.ok) {
-      throw new Error("Erreur suppression")
-    }
   } catch (error) {
     console.error(error)
   }
 }
 
-function showMessage(text) {
-  const message = document.getElementById("message")
-
-  message.textContent = text
-
-  // disparition du message automatiquement
-  setTimeout(() => {
-    message.textContent = ""
-  }, 3000)
-}
-
-// ajout travaux
+// Ajout d'un projet
 const fileInput = document.getElementById("file-element")
 const btnAddFile = document.getElementById("btn-add-file")
 
@@ -267,29 +269,6 @@ fileInput.addEventListener("change", () => {
   preview.style.display = "block"
   placeholder.style.display = "none"
 })
-
-// catégories pour la liste déroulante
-let categories = []
-
-async function fetchCategories() {
-  const response = await fetch("http://localhost:5678/api/categories")
-  categories = await response.json()
-
-    loadCategories(categories)
-}
-function loadCategories(categories) {
-  const select = document.getElementById("category")
-  select.innerHTML = "" 
-
-  categories.forEach(cat => {
-    const option = document.createElement("option")
-    option.value = cat.id
-    option.textContent = cat.name
-
-    select.appendChild(option)
-  })
-}
-fetchCategories()
 
 const titleInput = document.getElementById("title")
 const categorySelect = document.getElementById("category")
@@ -315,31 +294,17 @@ btnValidate.addEventListener("click", async (e) => {
   formData.append("category", category)
 
   try {
-    const token = localStorage.getItem("token")
-
-    const response = await fetch("http://localhost:5678/api/works", {
+    const newWork = await apiFetch("/works", {
       method: "POST",
-      headers: {
-        "Authorization": `Bearer ${token}`
-      },
       body: formData
     })
 
-    if (!response.ok) {
-      throw new Error("Erreur upload")
-    }
-
-    const newWork = await response.json()
-
-    // ajout dans la galerie principale
     addWorkToGallery(newWork)
 
-    // ajout dans la modale
     addWorkToModal(newWork)
 
     showMessage("Projet ajouté")
 
-    // revenir étape 1
     showStep(1)
 
   } catch (error) {
@@ -383,4 +348,16 @@ function addWorkToModal(work) {
   div.appendChild(deleteIcon)
 
   modalGallery.appendChild(div)
+}
+
+// Feedback utilisateur grâce à un message
+function showMessage(text, error = false) {
+  const message = document.getElementById("message")
+
+  message.textContent = text
+  message.className = error ? "error" : ""
+  // disparition du message automatiquement
+  setTimeout(() => {
+    message.textContent = ""
+  }, 3000)
 }
