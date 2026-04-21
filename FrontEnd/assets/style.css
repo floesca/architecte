@@ -268,7 +268,6 @@ footer nav ul {
 /* modale */
 .modal {
 	position: fixed;
-	display: flex;
 	align-items: center;
 	justify-content: center;
 	top: 0;
@@ -280,7 +279,7 @@ footer nav ul {
 .modal-wrapper {
 	background-color: #FFFEF8;
 	width: 600px;
-	height: 600px;
+	height: 660px;
 	padding: 20px;
 	border-radius: 10px;
 }
@@ -302,7 +301,7 @@ footer nav ul {
 	font-weight: 700;
 	color: white;
 	background-color: #1D6154;
-	margin : 2em auto ;
+	margin : 3em auto ;
 	width: 237px;
 	height: 36px;
 	text-align: center;
@@ -444,6 +443,7 @@ footer nav ul {
 	display: none;
 }
 
+/* message d'erreur feedback utilisateur */
 #message, #message2 {
 	text-align: center;
 	color: red;
