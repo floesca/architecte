@@ -322,7 +322,6 @@ footer nav ul {
 .modal-gallery {
 	display: flex;
 	flex-wrap: wrap;
-	justify-content: space-between;
 	gap: 10px;
 	margin: 40px 70px;
 }
@@ -438,14 +437,14 @@ footer nav ul {
 	bottom: 50px;
     left: 40%;
 }
-.confirm-box p {
+#confirm-delete p {
 	font-size: 16px;
 }
 .hidden {
 	display: none;
 }
 
-#message {
+#message, #message2 {
 	text-align: center;
 	color: red;
 }

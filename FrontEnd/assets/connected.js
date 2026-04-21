@@ -1,8 +1,6 @@
 // initialisation (chargement de la page)
 const API = "http://localhost:5678/api"
 
-createModal()
-
 function getToken() {
   return localStorage.getItem("token")
 }
@@ -125,8 +123,8 @@ function createModal() {
 const modalAside = document.createElement("aside")
 modalAside.id = "modal"
 modalAside.className = "modal"
-modalAside.setAttribute = ("aria-hidden", "true")
-modalAside.setAttribute = ("role", "dialog")
+modalAside.setAttribute("aria-hidden", "true")
+modalAside.setAttribute("role", "dialog")
 modalAside.style.display = "none"
 
 const step1 = document.createElement("div")
@@ -153,7 +151,7 @@ btnAddPhoto.id = "btn-add-photo"
 
 const confirmBox = document.createElement("div")
 confirmBox.id = "confirm-delete"
-confirmBox.className = "hidden"
+confirmBox.className = "confirm-delete hidden"
 
 const confirmText = document.createElement("p")
 confirmText.textContent = "Supprimer cet élément ?"
@@ -258,6 +256,9 @@ form.append(
 
 const hr2 = document.createElement("hr")
 
+const divMessage2 = document.createElement("div")
+divMessage2.id = "message2"
+
 const btnValidate = document.createElement("button")
 btnValidate.textContent = "Valider"
 btnValidate.id = "btn-validate"
@@ -267,6 +268,7 @@ step2.append(
   title2,
   form,
   hr2,
+  divMessage2,
   btnValidate)
 
 modalAside.append(step1, step2)  
@@ -278,6 +280,8 @@ return modalAside
 let modal = null
 let currentStep = 1
 
+const modalElement = createModal()
+
 // quand on clique sur chaque lien avec la classe js-modal, la fonction openModal se lance (bouton modifier)
 document.querySelectorAll(".js-modal").forEach(a => {
   a.addEventListener("click", (e) => {
@@ -285,7 +289,7 @@ document.querySelectorAll(".js-modal").forEach(a => {
   })
 })
 
-document.querySelector("#modal").addEventListener("click", function (e) {
+modalElement.addEventListener("click", function (e) {
   if (e.target === e.currentTarget) {
     closeModal(e)
   }
@@ -317,6 +321,12 @@ function showStep(step) {
   document.querySelectorAll(".modal-wrapper").forEach(el => {
     el.style.display = el.dataset.step == step ? "block" : "none"
   })
+
+  const msg1 = document.getElementById("message")
+if (msg1) msg1.textContent = ""
+
+  const msg2 = document.getElementById("message2")
+if (msg2) msg2.textContent = ""
 }
 
 document.addEventListener("click", function (e) {
@@ -432,7 +442,6 @@ btnValidate.addEventListener("click", async (e) => {
   const category = categorySelect.value
 
   if (!file || !title || !category) {
-    console.log("validation bloquée")
     showMessage("Tous les champs sont obligatoires")
     return
   }
@@ -453,6 +462,8 @@ btnValidate.addEventListener("click", async (e) => {
 
     addWorkToModal(newWork)
 
+    showStep(1)
+
     showMessage("Projet ajouté")
 
     // Réinitialisation du formulaire d'ajout après l'ajout du nouveau projet
@@ -465,8 +476,6 @@ btnValidate.addEventListener("click", async (e) => {
     preview.src = ""
     preview.style.display = "none"
     placeholder.style.display = "flex"
-
-    showStep(1)
 
   } catch (error) {
     showMessage("Erreur lors de l'ajout")
@@ -514,10 +523,15 @@ function addWorkToModal(work) {
 // Feedback utilisateur grâce à un message
 function showMessage(text) {
   const message = document.getElementById("message")
+  const message2 = document.getElementById("message2")
 
-  message.textContent = text
-  // disparition du message automatiquement
+  const target = currentStep === 2 ? message2 : message
+
+  if (!target) return
+
+  target.textContent = text
+
   setTimeout(() => {
-    message.textContent = ""
+    target.textContent = ""
   }, 3000)
 }
