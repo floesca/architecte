@@ -404,6 +404,12 @@ footer nav ul {
 .add-photo-form label {
 	margin: 2em 0 1em 0;
 }
+#preview-image {
+  max-width: 100%;
+  max-height: 150px;
+  object-fit: contain;
+}
+
 #upload-placeholder {
 	display: flex;
 	flex-direction: column;
@@ -424,7 +430,7 @@ footer nav ul {
 }
 
 /* message de confirmation de suppression */
-.confirm-box {
+#confirm-delete {
 	position: absolute;
 	background: #FFFEF8;
 	padding: 15px;

@@ -1,6 +1,8 @@
 // initialisation (chargement de la page)
 const API = "http://localhost:5678/api"
 
+createModal()
+
 function getToken() {
   return localStorage.getItem("token")
 }
@@ -52,7 +54,6 @@ const isValid = token && isTokenValid(token)
 // UI (filtres, bouton d'édition, mode admin)
 const btnLogin = document.getElementById("btnLogin")
 if (isValid) {
-  console.log("valide")
   document.querySelector(".filters").style.display = "none"
   
   btnLogin.textContent = "logout"
@@ -119,6 +120,161 @@ function loadCategories(categories) {
 fetchCategories()
 
 // Gestion de la modale
+// création de la modale
+function createModal() {
+const modalAside = document.createElement("aside")
+modalAside.id = "modal"
+modalAside.className = "modal"
+modalAside.setAttribute = ("aria-hidden", "true")
+modalAside.setAttribute = ("role", "dialog")
+modalAside.style.display = "none"
+
+const step1 = document.createElement("div")
+step1.className = "modal-wrapper"
+step1.dataset.step = "1"
+
+const closeIcon1 = document.createElement("i")
+closeIcon1.className = "fa-solid fa-xmark js-close-modal"
+
+const title1 = document.createElement("p")
+title1.textContent = "Galerie photo"
+
+const modalGallery = document.createElement("div")
+modalGallery.className = "modal-gallery"
+
+const hr1 = document.createElement("hr")
+
+const divMessage = document.createElement("div")
+divMessage.id = "message"
+
+const btnAddPhoto = document.createElement("button")
+btnAddPhoto.textContent = "Ajouter une photo"
+btnAddPhoto.id = "btn-add-photo"
+
+const confirmBox = document.createElement("div")
+confirmBox.id = "confirm-delete"
+confirmBox.className = "hidden"
+
+const confirmText = document.createElement("p")
+confirmText.textContent = "Supprimer cet élément ?"
+
+const btnYes = document.createElement("button")
+btnYes.textContent = "Oui"
+btnYes.id = "confirm-yes"
+
+const btnNo = document.createElement("button")
+btnNo.textContent = "Non"
+btnNo.id = "confirm-no"
+
+confirmBox.append(confirmText, btnYes, btnNo)
+
+step1.append(
+  closeIcon1,
+  title1,
+  modalGallery,
+  hr1,
+  divMessage,
+  btnAddPhoto,
+  confirmBox)
+
+const step2 =document.createElement("div")
+step2.className = "modal-wrapper"
+step2.dataset.step = "2"
+step2.style.display = "none"
+
+const icons = document.createElement("div")
+icons.className = "modal-icons"
+
+const backIcon = document.createElement("i")
+backIcon.className = "fa-solid fa-arrow-left js-back"
+
+const closeIcon2 = document.createElement("i")
+closeIcon2.className = "fa-solid fa-xmark js-close-modal"
+
+icons.append(backIcon, closeIcon2)
+
+const title2 = document.createElement("p")
+title2.textContent = "Ajout photo"
+
+const form = document.createElement("div")
+form.className = "add-photo-form"
+
+const fileBlock = document.createElement("div")
+fileBlock.className = "add-file"
+
+const divPlaceholder = document.createElement("div")
+divPlaceholder.id = "upload-placeholder"
+
+const icon = document.createElement("i")
+icon.className = "fa-regular fa-image"
+
+const btnAddFileDiv = document.createElement("button")
+btnAddFileDiv.id = "btn-add-file"
+btnAddFileDiv.textContent = "+ Ajouter photo"
+
+const info = document.createElement("p")
+info.textContent = "jpg, png : 4mo max"
+
+divPlaceholder.append(
+  icon,
+  btnAddFileDiv,
+  info)
+
+const preview = document.createElement("img")
+preview.id = "preview-image"
+preview.src = ""
+preview.style.display = "none"
+
+const fileInput = document.createElement("input")
+fileInput.id = "file-element"
+fileInput.type = "file"
+fileInput.accept = "image/*"
+fileInput.style.display = "none"
+
+fileBlock.append(
+  divPlaceholder,
+  preview,
+  fileInput)
+
+const labelTitle = document.createElement("label")
+labelTitle.textContent = "Titre"
+
+const inputTitle = document.createElement("input")
+inputTitle.id = "title"
+
+const labelCat = document.createElement("label")
+labelCat.textContent = "Catégories"
+
+const select = document.createElement("select")
+select.id = "category"
+
+form.append(
+  fileBlock,
+  labelTitle,
+  inputTitle,
+  labelCat,
+  select
+)
+
+const hr2 = document.createElement("hr")
+
+const btnValidate = document.createElement("button")
+btnValidate.textContent = "Valider"
+btnValidate.id = "btn-validate"
+
+step2.append(
+  icons,
+  title2,
+  form,
+  hr2,
+  btnValidate)
+
+modalAside.append(step1, step2)  
+
+document.body.appendChild(modalAside)
+return modalAside
+}
+
 let modal = null
 let currentStep = 1
 
@@ -225,7 +381,7 @@ document.getElementById("confirm-yes").addEventListener("click", async () => {
     showMessage("Supprimé")
 
   } catch {
-    showMessage("Erreur", true)
+    showMessage("Erreur")
   }
 
   workToDelete = null
@@ -276,8 +432,8 @@ btnValidate.addEventListener("click", async (e) => {
   const category = categorySelect.value
 
   if (!file || !title || !category) {
-    console.log("bloqué validation")
-    showMessage("Tous les champs sont obligatoires", true)
+    console.log("validation bloquée")
+    showMessage("Tous les champs sont obligatoires")
     return
   }
 
@@ -313,7 +469,7 @@ btnValidate.addEventListener("click", async (e) => {
     showStep(1)
 
   } catch (error) {
-    showMessage("Erreur lors de l'ajout", true)
+    showMessage("Erreur lors de l'ajout")
     console.error(error)
   }
 })
@@ -356,11 +512,10 @@ function addWorkToModal(work) {
 }
 
 // Feedback utilisateur grâce à un message
-function showMessage(text, error = false) {
+function showMessage(text) {
   const message = document.getElementById("message")
 
   message.textContent = text
-  message.className = error ? "error" : ""
   // disparition du message automatiquement
   setTimeout(() => {
     message.textContent = ""

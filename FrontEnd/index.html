@@ -55,47 +55,6 @@
 		<div class="gallery"></div>
 	</section>
 
-	<aside id="modal" class="modal" aria-hidden="true" role="dialog" style="display: none;">
-		<div id="modal1" class="modal-wrapper js-stop-modal" data-step="1">
-			<i class="fa-solid fa-xmark js-close-modal"></i>
-			<p>Galerie photo</p>
-			<div class="modal-gallery"></div>
-			<hr />
-			<div id="message"></div>
-			<button id="btn-add-photo" type="button">Ajouter une photo</button>
-			<div id="confirm-delete" class="confirm-box hidden">
-			<p>Supprimer cet élément ?</p>
-			<button id="confirm-yes">Oui</button>
-			<button id="confirm-no">Non</button>
-			</div>
-		</div>
-	
-		<div id="modal2" class="modal-wrapper js-stop-modal" data-step="2" style="display: none;">
-			<div class="modal-icons">
-				<i class="fa-solid fa-arrow-left js-back"></i>
-				<i class="fa-solid fa-xmark js-close-modal"></i>
-			</div>
-			<p>Ajout photo</p>
-			<div class="add-photo-form">
-				<div class="add-file">
-					<div id="upload-placeholder">
-						<i class="fa-regular fa-image"></i>
-						<button id="btn-add-file" type="button">+ Ajouter photo</button>
-						<p>jpg, png : 4mo max</p>
-					</div>
-					<img id="preview-image" style="display:none; max-width: 100px;">
-					<input type="file" id="file-element" accept="image/*" style="display: none;">
-				</div>
-				<label for="title">Titre</label>
-				<input type="text" name="title" id="title">
-				<label for="category">Catégorie</label>
-				<select name="category" id="category"></select>
-			</div>
-			<hr />
-			<button id="btn-validate">Valider</button>
-		</div>
-	</aside>
-
 	<section id="contact">
 		<h2>Contact</h2>
 		<p>Vous avez un projet ? Discutons-en !</p>
@@ -105,7 +64,7 @@
 			<label for="email">Email</label>
 			<input type="email" name="email" id="email">
 			<label for="message">Message</label>
-			<textarea name="message" id="message" cols="30" rows="10"></textarea>
+			<textarea name="message-area" id="message-area" cols="30" rows="10"></textarea>
 			<input type="submit" value="Envoyer">
 		</form>
 	</section>
