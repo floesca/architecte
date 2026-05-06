@@ -23,6 +23,7 @@ async function fetchWorks() {
 //fonction affichage des travaux
 function loadWorks(works) {
     const gallery = document.querySelector(".gallery")
+    // on vide la galerie avant de la récréer pour éviter les éléments en double
     gallery.innerHTML = "" 
     //création des éléments image dans la div gallery
     for (let i = 0; i < works.length; i++) {
@@ -45,7 +46,7 @@ function loadWorks(works) {
         gallery.appendChild(figure)
     }
 }
-//récupération initiale
+//récupération initiale au chargement de la page
 fetchWorks()
 
 
@@ -75,7 +76,9 @@ for (let i = 0; i < categories.length; i++) {
     btnFiltre.textContent = category.name
 
     btnFiltre.addEventListener("click", () => {
+        // on affiche les projets seulement de la catégorie sélectionnée
         const filteredWorks = works.filter(works => works.categoryId === category.id)
+        // on réaffiche la galerie avec les projets selectionnés
         loadWorks(filteredWorks)
     })
     filters.appendChild(btnFiltre)

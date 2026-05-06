@@ -1,10 +1,12 @@
 // initialisation (chargement de la page)
-const API = "http://localhost:5678/api"
+const API = "http://localhost:5678/api" // stocke l'url de base du serveur, toutes les requêtes partent de cette adresse
 
+// on recupère le token dans le localStorage, pour prouver que l'utilisateur est connecté
 function getToken() {
   return localStorage.getItem("token")
 }
 
+// fonction universelle de requête API, asynchrone = attend une réponse du serveur sans bloquer le reste de la page
 async function apiFetch(path, options = {}) {
   const token = getToken()
 
@@ -47,7 +49,7 @@ function parseJwt (token) {
 
     return JSON.parse(jsonPayload);
 }
-const isValid = token && isTokenValid(token)
+const isValid = token && isTokenValid(token) // && = ET logique
 
 // UI (filtres, bouton d'édition, mode admin)
 const btnLogin = document.getElementById("btnLogin")
@@ -59,7 +61,7 @@ if (isValid) {
   btnLogin.addEventListener("click", () => {
     localStorage.removeItem("token")
     window.location.reload()
-
+    // quand on clique sur le bouton logout, le token est supprimé, la page se recharge et l'utilisateur est déconnecté
   })
 } else {
     document.querySelector(".bandeau-edit-mode").style.display = "none"
@@ -83,11 +85,13 @@ async function fetchCategories() {
 // Affichage des projets et des catégories dans la modale
 function loadModalWorks(works) {
     const modalGallery = document.querySelector(".modal-gallery")
-    modalGallery.innerHTML = "" 
+
+    modalGallery.innerHTML = "" // vide le contenu existant pour éviter les doublons
+
     for (let i = 0; i < works.length; i++) {
         const figure = document.createElement("div")
         figure.classList.add("image-container-modal")
-        figure.dataset.id = works[i].id
+        figure.dataset.id = works[i].id // stocke l'identifiant du projet 
 
         const worksElement = document.createElement("img")
         worksElement.src = works[i].imageUrl
@@ -282,19 +286,21 @@ let currentStep = 1
 
 const modalElement = createModal()
 
-// quand on clique sur chaque lien avec la classe js-modal, la fonction openModal se lance (bouton modifier)
+// quand on clique sur chaque lien avec la classe js-modal (le bouton modifier), la fonction openModal se lance (bouton modifier)
 document.querySelectorAll(".js-modal").forEach(a => {
   a.addEventListener("click", (e) => {
   openModal(e);
   })
 })
 
+// si l'utilisateur clique en dehors du contenu de la modale, elle se ferme
 modalElement.addEventListener("click", function (e) {
   if (e.target === e.currentTarget) {
     closeModal(e)
   }
 })
 
+// gestion de l'ouverture / fermeture de la modale
 function openModal(e) {
   modal = document.querySelector("#modal")
 
@@ -318,6 +324,7 @@ function closeModal(e) {
 function showStep(step) {
   currentStep = step
 
+  // affiche uniquement le wrapper dont le data-step correspond au numéro demandé et cache les autres
   document.querySelectorAll(".modal-wrapper").forEach(el => {
     el.style.display = el.dataset.step == step ? "block" : "none"
   })
@@ -358,6 +365,7 @@ let workToDelete = null
 
 document.addEventListener("click", async (e) => {
 
+  // délégation d'événements = on écoute tous les clics sur le document et on vérifie si la cible est une corbeille
   const deleteBtn = e.target.closest(".delete-icon")
   
   if (!deleteBtn) return
@@ -366,6 +374,7 @@ document.addEventListener("click", async (e) => {
 
   if (!figure) return
 
+  // un clic sur la corbeille stocke le projet dans workToDelete et affiche la boîte de confirmation
   workToDelete = figure
 
   document.getElementById("confirm-delete").classList.remove("hidden")
@@ -403,6 +412,7 @@ document.getElementById("confirm-no").addEventListener("click", () => {
   document.getElementById("confirm-delete").classList.add("hidden")
 })
 
+// deleteWork envoie une requête DELETE à l'API
 async function deleteWork(id) {
     await apiFetch(`/works/${id}`, {
     method: "DELETE",
@@ -425,7 +435,7 @@ fileInput.addEventListener("change", () => {
   const preview = document.getElementById("preview-image")
   const placeholder = document.getElementById("upload-placeholder")
 
-  preview.src = URL.createObjectURL(file)
+  preview.src = URL.createObjectURL(file) // crée une URL temporaire pour afficher un aperçcu de l'image choisie, avant l'envoi au serveur
   preview.style.display = "block"
   placeholder.style.display = "none"
 })

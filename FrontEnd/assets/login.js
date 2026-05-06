@@ -53,34 +53,41 @@ function createLoginForm() {
     loginForm.appendChild(form)
 }
 
-
+// ajout d'un événement sur le formulaire de connexion / gère le comportement du formulaire
 function ajoutListenerLogin() {
     const errorPassword = document.querySelector("span.error")
 
     const envoyerLogin = document.querySelector(".login-form")
+    // on écoute l'événement submit quand on envoie le formulaire
     envoyerLogin.addEventListener("submit", async (event) => {
-        console.log("Formulaire soumis")
-    event.preventDefault()
+   
+    event.preventDefault()   // on empêche la page de se recharger automatiquement
 
     const login = {
         email: event.target.querySelector("[name=email]").value,
         password: event.target.querySelector("[name=password]").value
-    }
+    } // on récupère les identifiants saisis dans le formulaire
 
-    const chargeUtile = JSON.stringify(login)
+    const chargeUtile = JSON.stringify(login) // on transforme les données en JSON pour l'API
+
     const response = await fetch("http://localhost:5678/api/users/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: chargeUtile
-    })
-    const data = await response.json()
+    }) // on envoie une requête POST à l'API avec les identifiants de l'utilisateur
+
+    const data = await response.json() // on récupère la réponse de l'API (un token)
+
     if (response.ok) {
         console.log("Connexion réussie ! Token :", data.token)
         localStorage.setItem("token", data.token)
         window.location.href = "index.html"
+    // si la réponse est ok, on stocke le token et retourne à la page principale
+
     } else {
         errorPassword.textContent = "Le mot de passe ou l'email est incorrect."
         errorPassword.className = "error active"
     }   
+    // sinon, message d'erreur car les identifiants ne sont pas corrects
 })
 }
